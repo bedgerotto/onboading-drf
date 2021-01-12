@@ -1,0 +1,29 @@
+version: "3.7"
+services:
+  db:
+    image: postgres:latest
+    restart: always
+    environment:
+      - POSTGRES_DB=djangoresttutorial
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=bruno
+    ports: 
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  app:
+    build: .
+    restart: always
+    entrypoint: 'bash ./entrypoint.sh'
+    command: python manage.py runserver 0:8000
+    depends_on: 
+      - db
+    ports:
+      - '8000:8000'
+    volumes: 
+      - ${PWD}:/code
+      - venv_lib:/opt/venv
+volumes:
+  pgdata:
+  venv_lib:
